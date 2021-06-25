@@ -16,12 +16,10 @@ import javafx.fxml.Initializable;
  */
 public class VentanaPrincipalController implements Initializable {
         
-    /**
-     * Initializes the controller class.
-     */
+    //fx:controller="com.espol.ed.grupo_05_ed.VentanaPrincipalController"
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        
     }    
     
 }
