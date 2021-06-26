@@ -12,27 +12,36 @@ package TDAs;
 public class CircularDoubleNode<E> {
 
     private E content;
-    private CircularDoubleNode<E> last;
+    private CircularDoubleNode<E> previous, next;
 
     public CircularDoubleNode(E data) {
         this.content = data;
-        this.last = null;
+        this.next = null;
+        this.previous = null;
     }
 
     public E getContent() {
         return content;
     }
 
+    public CircularDoubleNode<E> getPrevious() {
+        return previous;
+    }
+
+    public CircularDoubleNode<E> getNext() {
+        return next;
+    }
+
     public void setContent(E content) {
         this.content = content;
     }
 
-    public void setLast(CircularDoubleNode<E> last) {
-        this.last = last;
+    public void setPrevious(CircularDoubleNode<E> previous) {
+        this.previous = previous;
     }
 
-    public CircularDoubleNode<E> getLast() {
-        return last;
+    public void setNext(CircularDoubleNode<E> next) {
+        this.next = next;
     }
 
 }
