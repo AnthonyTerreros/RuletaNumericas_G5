@@ -10,5 +10,13 @@ package models;
  * @author AnthonyTerreros
  */
 public class RuletaNumerica {
+    public static int numCirculos;
+    public static int apuestaInicial;
+
+    public RuletaNumerica(int numCirculo, int apuestaIni) {
+        numCirculos = numCirculo;
+        apuestaInicial = apuestaIni;
+    }
+    
     
 }
