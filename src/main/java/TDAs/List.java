@@ -10,26 +10,33 @@ import java.util.Iterator;
 
 /**
  *
- * @author damar
+ * @author Viviana Velasco
  */
 public interface List <E> extends Iterable<E> {
     
-   boolean addFirst(E element);
-   boolean addLast(E element);
-   boolean removeFirst();
-   boolean removeLast();
-   E getFirst();
-   E getLast();
-   boolean insert(int index, E element);
-   boolean contains(E element);
-   E get(int index);
-   int indexOf(E element);
-   boolean isEmpty();
-   E remove(int index);
-   boolean remove(E element);
-   E set(int index, E element);
-   int size();
+   public boolean addFirst(E e); 
+
+    public boolean addLast(E e); 
+
+    public E removeFirst(); 
+
+    public E removeLast(); 
+
+    public int size();
+
+    public boolean isEmpty();
+
+    public void clear();
    
+    public void add(int index, E element);
+
+    public E remove(int index); 
+
+    public E get(int index);
+
+    public E set(int index, E element); 
+   
+    public String toString(); 
   /*
    public List<E> findAll (Comparator<E> cmp, E element); //comparadores por si los necesitamos
    public List<E> findLowerThan (Comparator<E> cmp, E element);
