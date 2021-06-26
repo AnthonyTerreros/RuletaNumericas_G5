@@ -204,7 +204,7 @@ public class LinkedList<E> implements List<E> {
         return s;
     }
 
-    @Override
+
     public Iterator<E> iterator() {
         Iterator<E> it = new Iterator<E>(){
             private Node<E> p = first;

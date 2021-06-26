@@ -208,7 +208,6 @@ public class ArrayList<E> implements List<E> {
         return "["+s+"]";
     }
 
-    @Override
     public Iterator<E> iterator() {
         Iterator<E> it = new Iterator<E>(){
             
