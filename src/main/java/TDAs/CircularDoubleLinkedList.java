@@ -12,7 +12,7 @@ import java.util.Iterator;
  *
  * @author damar
  */
-public class CircularDoubleLinkedList <E> implements List<E> {
+/*public class CircularDoubleLinkedList <E> implements List<E> {
     private int efectivo;
     private CircularDoubleNode <E> previous;
     private CircularDoubleNode <E> next;
@@ -128,3 +128,4 @@ public class CircularDoubleLinkedList <E> implements List<E> {
     }
     
 }
+*/
