@@ -17,6 +17,16 @@ public class CircularDoubleLinkedList<E> implements List<E> {
     private int efectivo;
     private CircularDoubleNode<E> last;
 
+    @Override
+    public void clear() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void add(int index, E element) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     public CircularDoubleLinkedList() {
         efectivo = efectivo;
         last = null;
@@ -45,7 +55,22 @@ public class CircularDoubleLinkedList<E> implements List<E> {
 
     @Override
     public boolean addLast(E element) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+        CircularDoubleNode<E> nodo = new CircularDoubleNode<>(element);
+        if (element == null) {
+            return false;
+        } else if (isEmpty()) {
+            addFirst(element);
+
+        } else {
+            nodo.setPrevious(last);
+            nodo.setNext(last.getNext());
+            last.setNext(nodo);
+            last = nodo;
+        }
+        efectivo--;
+        return true;
+
     }
 
     @Override
@@ -57,32 +82,19 @@ public class CircularDoubleLinkedList<E> implements List<E> {
     public E removeLast() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-/*
-    @Override
-    public E getFirst() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public E getLast() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean insert(int index, E element) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean contains(E element) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }*/
 
     @Override
     public E get(int index) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+        int c = 0;
+        for (CircularDoubleNode<E> i = last.getNext(); i != last; i = i.getNext()) {
+            if (c == index) {
+                return i.getContent();
+            }
+            c++;
+        }
+        return null;
 
+    }
 
     @Override
     public boolean isEmpty() {
@@ -92,17 +104,38 @@ public class CircularDoubleLinkedList<E> implements List<E> {
 
     @Override
     public E remove(int index) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int c = 0;
+        E u = last.getContent();
+        for (CircularDoubleNode<E> i = last.getNext(); i != last; i = i.getNext()) {
+            if (c == index) {
+                E d = i.getContent();
+                (i.getPrevious()).setNext(i.getNext());
+                (i.getNext()).setPrevious(i.getPrevious());
+                System.out.println(c + " " + index);
+                return d;
+            }
+            c++;
+        }
+        return u;
     }
 
     @Override
     public E set(int index, E element) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int c = 0;
+        for (CircularDoubleNode<E> i = last.getNext(); i != last; i = i.getNext()) {
+            if (c == index) {
+                E d = i.getContent();
+                i.setContent(element);
+                return d;
+            }
+            c++;
+        }
+        return null;
     }
 
     @Override
     public int size() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return efectivo;
     }
 
     public String toString() {
@@ -128,17 +161,5 @@ public class CircularDoubleLinkedList<E> implements List<E> {
         }
         return s.toString();
     }
-
-    @Override
-    public void clear() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void add(int index, E element) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    
 
 }
