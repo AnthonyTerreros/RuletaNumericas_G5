@@ -157,7 +157,7 @@ public class ArrayList<E> implements List<E> {
 
     
     public E get(int index) {
-        if(index>0 && index<capacity){
+        if(index>=0 && index<capacity){
             return elements[index];
         }else{
            return null; 

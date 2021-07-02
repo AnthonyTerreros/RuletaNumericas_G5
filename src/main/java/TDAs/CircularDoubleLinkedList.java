@@ -5,6 +5,8 @@
  */
 package TDAs;
 
+import java.util.Iterator;
+
 /**
  *
  * @author damar
@@ -233,6 +235,26 @@ public class CircularDoubleLinkedList<E> implements List<E> {
             s.append(last.getContent() + "]");
         }
         return s.toString();
+    }
+
+    @Override
+    public Iterator<E> iterator() {
+        Iterator<E> it = new Iterator<E>() {
+            private CircularDoubleNode<E> p = last;
+            
+            @Override
+            public boolean hasNext() {
+                return p != last.getPrevious();
+            }
+
+            @Override
+            public E next() {
+                E e = p.getContent();
+                p = p.getNext();
+                return e;
+            }
+        };
+        return it;
     }
 
 }

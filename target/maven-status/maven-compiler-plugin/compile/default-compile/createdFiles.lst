@@ -1,11 +1,13 @@
 TDAs\CircularDoubleNode.class
 TDAs\LinkedList$1.class
 TDAs\Node.class
+TDAs\CircularDoubleLinkedList$1.class
 TDAs\CircularDoubleLinkedList.class
 TDAs\ArrayList$1.class
 TDAs\List.class
 TDAs\LinkedList.class
 com\espol\ed\grupo_05_ed\VentanaPrincipalController.class
+models\Rotate.class
 module-info.class
 models\RuletaNumerica.class
 com\espol\ed\grupo_05_ed\App.class

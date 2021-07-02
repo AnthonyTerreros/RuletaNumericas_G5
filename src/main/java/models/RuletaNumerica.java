@@ -21,14 +21,14 @@ public class RuletaNumerica {
     public static int apuestaInicial;
     public static RuletaNumerica ruletaNumerica;
     
-    public static ArrayList<CircularDoubleLinkedList<Integer>> ruletas;
+    public ArrayList<CircularDoubleLinkedList<Integer>> ruletas;
 
     private RuletaNumerica() {
         ruletas = new ArrayList<>();
         while(ruletas.size() < 2){
             CircularDoubleLinkedList<Integer> cdll = new CircularDoubleLinkedList<>();
             for(int i = 0; i < numCirculos; i++){
-                cdll.addLast(RuletaNumerica.generarNumAle());
+                cdll.addLast(RuletaNumerica.generarNumAle(9));
             }
             ruletas.addLast(cdll);
         }
@@ -39,40 +39,39 @@ public class RuletaNumerica {
             ruletaNumerica = new RuletaNumerica();
         }
         return ruletaNumerica;
-        
     }
     
-    public static void addRuletas(CircularDoubleLinkedList<Integer> cdll){
+    public void addRuletas(CircularDoubleLinkedList<Integer> cdll){
         ruletas.addLast(cdll);
     }
     
-    public static void rotateLeft(CircularDoubleLinkedList<Integer> l){
-        if(l.isEmpty()) return;
-        CircularDoubleNode<Integer> current = l.getLast().getNext();
-        while(current != l.getLast()){
+    public static void rotate(CircularDoubleLinkedList<Integer> l, Rotate r) {
+        if (l.isEmpty()) {
+            return;
+        } else if (r == Rotate.LEFT) {
+            CircularDoubleNode<Integer> current = l.getLast().getNext();
+            while (current != l.getLast()) {
+                current.setContent(current.getContent() - 1);
+                current = current.getNext();
+            }
             current.setContent(current.getContent() - 1);
-            current = current.getNext();
-        }
-        current.setContent(current.getContent() - 1);
-        l.setLast(l.getLast().getNext());
-        System.out.println(l);
-    }
-
-    public static void rotateRight(CircularDoubleLinkedList<Integer> l){
-        if(l.isEmpty()) return;
-        CircularDoubleNode<Integer> current = l.getLast().getNext();
-        while(current != l.getLast()){
+            l.setLast(l.getLast().getNext());
+            System.out.println(l);
+        } else {
+            CircularDoubleNode<Integer> current = l.getLast().getNext();
+            while (current != l.getLast()) {
+                current.setContent(current.getContent() + 1);
+                current = current.getNext();
+            }
             current.setContent(current.getContent() + 1);
-            current = current.getNext();
+            l.setLast(current.getPrevious().getPrevious().getNext());
+            System.out.println(l);
         }
-        current.setContent(current.getContent() + 1);
-        l.setLast(current.getPrevious().getPrevious().getNext());
-        System.out.println(l);
     }
     
-    private static int generarNumAle() {
+    public static int generarNumAle(int n) {
         Random r = new Random();
-        return r.nextInt(9);
+        return r.nextInt(n);
     }
     
 }
