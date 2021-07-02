@@ -10,7 +10,6 @@ import TDAs.CircularDoubleLinkedList;
 import TDAs.CircularDoubleNode;
 import java.util.Random;
 
-
 /**
  *
  * @author AnthonyTerreros
@@ -20,7 +19,7 @@ public class RuletaNumerica {
     public static int numCirculos;
     public static int apuestaInicial;
     public static RuletaNumerica ruletaNumerica;
-    
+
     public ArrayList<CircularDoubleLinkedList<Integer>> ruletas;
 
     private RuletaNumerica() {
