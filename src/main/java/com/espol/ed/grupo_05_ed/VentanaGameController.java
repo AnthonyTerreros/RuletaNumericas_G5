@@ -67,16 +67,21 @@ public class VentanaGameController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         RuletaNumerica ng = RuletaNumerica.getRuletaNumerica();
         System.out.println("Ruletas: " + ng.ruletas);
-        System.out.println(sumTotal(ng.ruletas));
-        apuestaInicial.setText("Apuesta Inicial: " + String.valueOf(RuletaNumerica.apuestaInicial));
-        numeroProhibido.setText("Numero Prohibido: " + String.valueOf(RuletaNumerica.generarNumAle(100)));
-        Circle c = new Circle(150,150,150);
+        System.out.println();
+        apuestaInicial.setText(String.valueOf(RuletaNumerica.apuestaInicial));
+        apuestaInicial.setStyle("-fx-text-fill: green");
+        numeroProhibido.setText(String.valueOf(RuletaNumerica.generarNumAle(100)));
+        numeroProhibido.setStyle("-fx-text-fill: red");
+        sumaRuleta.setText(String.valueOf(sumTotal(ng.ruletas)));
+        sumaRuleta.setStyle("-fx-text-fill: green");
+        Circle c = new Circle(200,200,200);
         Circle c2 = new Circle(75, 75, 75);
         c.setFill(null);
         c2.setFill(null);
         c.setStroke(Color.BLACK);
         c2.setStroke(Color.BLACK);
-        StackPane container = new StackPane(c,c2);
+        StackPane cir = crearCirculo();
+        StackPane container = new StackPane(c,c2,cir);
         _root.getChildren().addAll(container);
         Game();
         
@@ -94,16 +99,30 @@ public class VentanaGameController implements Initializable {
         return cont;
     }
     
-    public static void Game(){
+    public static void Game() {
         System.out.println("Game");
     }
-    
-    public static void VentanaGanaste(){
-        
+
+    public static void VentanaGanaste() {
+
+    }
+
+    public static void VentanaPerdiste() {
+
     }
     
-    public static void VentanaPerdiste(){
-        
+    public static StackPane crearCirculo() {
+        Circle c = new Circle(25, 25, 25);
+        c.setStroke(Color.BLACK);
+        c.setFill(Color.RED);
+        Text t = new Text("5");
+        t.setStyle("-fx-font-weight: bold; -fx-font-size: 14; -fx-text-fill: white");
+        t.setFill(Color.WHITE);
+        t.setFont(Font.font("System",18));
+//        t.setBoundsType(TextBoundsType.VISUAL);
+        StackPane contenedor = new StackPane();
+        contenedor.getChildren().addAll(c, t);
+        return contenedor;
     }
     
 }
