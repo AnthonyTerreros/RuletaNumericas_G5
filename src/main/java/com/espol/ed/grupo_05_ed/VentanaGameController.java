@@ -5,6 +5,7 @@
  */
 package com.espol.ed.grupo_05_ed;
 
+import TDAs.CircularDoubleLinkedList;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -22,6 +23,9 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextBoundsType;
+import models.RuletaNumerica;
+import static models.RuletaNumerica.numCirculos;
+import static models.RuletaNumerica.ruletas;
 
 /**
  * FXML Controller class
@@ -46,41 +50,11 @@ public class VentanaGameController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        MenuItem girarDerecha = new MenuItem("Derecha");
-        MenuItem girarIzquierda = new MenuItem("Izquierda");
-        StackPane root = new StackPane();
-        Circle circuloExterior = new Circle(200,200,200);
-        Circle circuloInterior = new Circle(100,100,100);
-        Circle prueba = new Circle(25,25,25);
-        prueba.setFill(Color.YELLOW);
-        Text t = new Text("5");
-        t.setBoundsType(TextBoundsType.VISUAL);
-        StackPane ej = new StackPane();
-        ej.getChildren().addAll(prueba,t);
-        root.getChildren().add(ej);
-        circuloExterior.setFill(null);
-        circuloInterior.setFill(null);
-        circuloExterior.setStroke(Color.BLACK);
-        circuloInterior.setStroke(Color.BLACK);
-        root.setAlignment(Pos.CENTER);
-        root.getChildren().addAll(circuloExterior,circuloInterior);
-        btnRotar.getItems().clear();
-        btnRotar.getItems().add(girarDerecha);
-        btnRotar.getItems().add(girarIzquierda);
-        Label l = new Label();
-        _root.getChildren().addAll(l,root);
-        EventHandler<ActionEvent> evn = new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                
-                l.setText(((MenuItem)e.getSource()).getText() + " Selecionado!");
-                
-            }
-        };
-        girarDerecha.setOnAction(evn);
-        girarIzquierda.setOnAction(evn);
-        
+        RuletaNumerica ng = RuletaNumerica.getRuletaNumerica();
+        System.out.println("Ruletas: " + RuletaNumerica.ruletas); 
     }
+    
+   
     
     
     

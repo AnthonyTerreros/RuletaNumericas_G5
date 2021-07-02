@@ -17,6 +17,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import models.RuletaNumerica;
 
 /**
  * FXML Controller class
@@ -42,17 +43,16 @@ public class VentanaPrincipalController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-//        btnJugar.setOnAction(new EventHandler<ActionEvent>() {
-//            @Override
-//            public void handle(ActionEvent t) {
-//                System.out.println(txtNumeroCirculos.getText());
-//            }
-//        });
-        
+           
     }   
     
     @FXML
-    void jugar(){
+    void jugar() {
+        if (!txtApuestaInicial.getText().equals("")) {
+            System.out.println(Integer.valueOf(txtNumeroCirculos.getText()) + " " + Integer.valueOf(txtApuestaInicial.getText()));
+            RuletaNumerica.numCirculos = Integer.valueOf(txtNumeroCirculos.getText());
+            RuletaNumerica.apuestaInicial = Integer.valueOf(txtApuestaInicial.getText());
+        }
         try {
             App.setRoot("VentanaGame");
         } catch (IOException ex) {

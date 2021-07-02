@@ -5,9 +5,6 @@
  */
 package TDAs;
 
-import TDAs.CircularDoubleNode;
-import java.util.Iterator;
-
 /**
  *
  * @author damar
@@ -206,6 +203,14 @@ public class CircularDoubleLinkedList<E> implements List<E> {
         return efectivo;
     }
 
+    public CircularDoubleNode<E> getLast() {
+        return last;
+    }
+
+    public void setLast(CircularDoubleNode<E> last) {
+        this.last = last;
+    }
+    
     public String toString() {
         StringBuilder s = new StringBuilder();
         if (isEmpty()) {
