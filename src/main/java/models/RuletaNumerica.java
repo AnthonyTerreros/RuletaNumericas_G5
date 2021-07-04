@@ -8,6 +8,8 @@ package models;
 import TDAs.ArrayList;
 import TDAs.CircularDoubleLinkedList;
 import TDAs.CircularDoubleNode;
+import TDAs.List;
+import java.util.Iterator;
 import java.util.Random;
 
 /**
@@ -20,7 +22,7 @@ public class RuletaNumerica {
     public static int apuestaInicial;
     public static RuletaNumerica ruletaNumerica;
 
-    public ArrayList<CircularDoubleLinkedList<Integer>> ruletas;
+    public static List<CircularDoubleLinkedList<Integer>> ruletas;
 
     private RuletaNumerica() {
         ruletas = new ArrayList<>();
@@ -66,6 +68,18 @@ public class RuletaNumerica {
             l.setLast(current.getPrevious().getPrevious().getNext());
             System.out.println(l);
         }
+    }
+    
+    public static int sumTotal(){
+        int cont = 0;
+        for(CircularDoubleLinkedList<Integer> cdll: ruletas){
+            Iterator<Integer> it = cdll.iterator();
+            while(it.hasNext()){
+                cont += it.next();
+            }
+            cont += it.next();
+        }
+        return cont;
     }
     
     public static int generarNumAle(int n) {
