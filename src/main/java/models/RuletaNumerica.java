@@ -17,22 +17,15 @@ import java.util.Random;
  * @author AnthonyTerreros
  */
 public class RuletaNumerica {
-    public static int numRuletasNumerica = 2;
-    public static int numCirculos;
-    public static int apuestaInicial;
+    public int numRuletasNumerica = 2;
+    public int numCirculos;
+    public int apuestaInicial;
     public static RuletaNumerica ruletaNumerica;
 
     public static List<CircularDoubleLinkedList<Integer>> ruletas;
 
     private RuletaNumerica() {
-        ruletas = new ArrayList<>();
-        while(ruletas.size() < 2){
-            CircularDoubleLinkedList<Integer> cdll = new CircularDoubleLinkedList<>();
-            for(int i = 0; i < numCirculos; i++){
-                cdll.addLast(RuletaNumerica.generarNumAle(9));
-            }
-            ruletas.addLast(cdll);
-        }
+        
     }
     
     public static RuletaNumerica getRuletaNumerica(){
@@ -42,9 +35,6 @@ public class RuletaNumerica {
         return ruletaNumerica;
     }
     
-    public void addRuletas(CircularDoubleLinkedList<Integer> cdll){
-        ruletas.addLast(cdll);
-    }
     
     public static void rotate(CircularDoubleLinkedList<Integer> l, Rotate r) {
         if (l.isEmpty()) {
@@ -85,6 +75,16 @@ public class RuletaNumerica {
     public static int generarNumAle(int n) {
         Random r = new Random();
         return r.nextInt(n);
+    }
+    public void cargarRuletas(){
+        ruletas = new ArrayList<>();
+        while(ruletas.size() < 2){
+            CircularDoubleLinkedList<Integer> cdll = new CircularDoubleLinkedList<>();
+            for(int i = 0; i < numCirculos; i++){
+                cdll.addLast(RuletaNumerica.generarNumAle(9));
+            }
+            ruletas.addLast(cdll);
+        }
     }
     
 }
