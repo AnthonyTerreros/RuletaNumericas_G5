@@ -39,7 +39,6 @@ public class ArrayList<E> implements List<E> {
         }
         else if(isFull()){
             addCapacity();
-            //vuelvo a llamar a la funcion, para poder agregar el elemento
             addFirst(e);
         }
         for(int i = effectiveSize -1; i >=0; i--){
@@ -57,13 +56,13 @@ public class ArrayList<E> implements List<E> {
         }
         else if(isFull()){
             addCapacity();
-            //vuelvo a llamar a la funcion, para poder agregar el elemento
             addLast(e);
         }else 
         elements[effectiveSize++] = e;
         return true;
     }
 
+    @Override
     public E removeFirst() {
         E temporal = elements[0];
         for(int i=0; i<effectiveSize; i++) {
@@ -120,8 +119,6 @@ public class ArrayList<E> implements List<E> {
         }
         else if(isFull()){
             addCapacity();
-            //vuelvo a llamar a la funcion, para poder agregar el elemento
-            //puede salir error si deseo anadir mas elemento, sin duplicar la lista
             add(index,element);
         }
         if(revisarindiceCorrecto(effectiveSize,index)){
@@ -140,11 +137,9 @@ public class ArrayList<E> implements List<E> {
     public E remove(int index) {
         if(revisarindiceCorrecto(effectiveSize,index)){
             E temporal3 = elements[index];
-            //recorrer el arreglo hasta el elemento que deseo eliminar
             for(int i=index; i<effectiveSize-1; i++) {
                 elements[i] = elements[i+1];
             }
-            //el ultimo elemento lo pongo en null
             elements[effectiveSize-1]=null;
             effectiveSize--;
             return temporal3;
@@ -157,7 +152,7 @@ public class ArrayList<E> implements List<E> {
 
     
     public E get(int index) {
-        if(index>=0 && index<capacity){
+        if(index>0 && index<capacity){
             return elements[index];
         }else{
            return null; 
@@ -208,6 +203,7 @@ public class ArrayList<E> implements List<E> {
         return "["+s+"]";
     }
 
+    @Override
     public Iterator<E> iterator() {
         Iterator<E> it = new Iterator<E>(){
             
@@ -228,5 +224,5 @@ public class ArrayList<E> implements List<E> {
         };
         
         return it;
-       }
+    }
 }
