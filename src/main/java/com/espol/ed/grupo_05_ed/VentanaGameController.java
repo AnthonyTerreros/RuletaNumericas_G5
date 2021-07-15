@@ -37,6 +37,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextBoundsType;
 import javafx.stage.Stage;
 import models.CirclePane;
+import models.Rotate;
 import models.RuletaNumerica;
 import models.Status;
 
@@ -249,5 +250,29 @@ public class VentanaGameController implements Initializable {
         });
         actualizarVentana();
     }
+    @FXML
+    public void rotarIzquierda(ActionEvent e){
+        RuletaNumerica rn = RuletaNumerica.getRuletaNumerica();
+        int value = indexCircuferencia.getValue();
+        rn.rotate(rn.ruletas.get(value), Rotate.LEFT);
+        actualizarVentana();
+    }
+
+    @FXML
+    public void rotarDerecha(ActionEvent e){
+        RuletaNumerica rn = RuletaNumerica.getRuletaNumerica();
+        int value = indexCircuferencia.getValue();
+        rn.rotate(rn.ruletas.get(value), Rotate.RIGHT);
+        actualizarVentana(); 
+    }
     
+    public void actualizarVentana(){
+        Thread t = new Thread(() -> {
+            Platform.runLater(() -> {
+            _root.getChildren().clear();
+            _root.getChildren().add(cargarContenidoVentana());
+            });
+        });
+        t.start();
+    }
 }
