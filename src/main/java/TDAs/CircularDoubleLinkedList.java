@@ -16,6 +16,11 @@ public class CircularDoubleLinkedList<E> implements List<E> {
     private int efectivo;
     private CircularDoubleNode<E> last;
 
+    public CircularDoubleLinkedList() {
+        efectivo = 0;
+        last = null;
+    }
+
     @Override
     public void clear() {
         last = null;
@@ -23,7 +28,6 @@ public class CircularDoubleLinkedList<E> implements List<E> {
 
     @Override
     public void add(int index, E element) {
-        int c = 0;
         CircularDoubleNode<E> nodo = new CircularDoubleNode<>(element);
         if (element == null) {
             System.out.println("valor ingresado invalido");
@@ -34,26 +38,19 @@ public class CircularDoubleLinkedList<E> implements List<E> {
 
         } else if (index < 0 || index > efectivo) {
             System.out.println("Index invalido");
-
         } else {
-
-            for (CircularDoubleNode<E> i = last.getNext(); i != last; i = i.getNext()) {
+            int c = 0;
+            for (CircularDoubleNode<E> current = last.getNext(); current != last; current = current.getNext()) {
                 if (c == index - 1) {
-                    nodo.setNext(i.getNext());
-                    i.setNext(nodo);
-                    nodo.setPrevious(i);
-                    nodo.getNext().setPrevious(nodo);
+                    current.getPrevious().setNext(nodo);
+                    nodo.setPrevious(current.getPrevious());
+                    nodo.setNext(current);
+                    current.setPrevious(nodo);
                     efectivo++;
                 }
                 c++;
             }
         }
-    }
-
-    public CircularDoubleLinkedList() {
-        efectivo = efectivo;
-        last = null;
-
     }
 
     @Override
@@ -63,14 +60,15 @@ public class CircularDoubleLinkedList<E> implements List<E> {
             return false;
         } else if (isEmpty()) {
             last = nodo;
-            nodo.setNext(nodo);
-            nodo.setPrevious(nodo);
+            last.setNext(nodo);
+            last.setPrevious(nodo);
             efectivo++;
         } else {
-            (last.getPrevious()).setPrevious(nodo);
             nodo.setNext(last.getNext());
-            nodo.setPrevious(last);
             last.setNext(nodo);
+            nodo.setPrevious(last);
+            nodo.getNext().setPrevious(nodo);
+
             efectivo++;
         }
         return true;
@@ -78,24 +76,19 @@ public class CircularDoubleLinkedList<E> implements List<E> {
 
     @Override
     public boolean addLast(E element) {
-
         CircularDoubleNode<E> nodo = new CircularDoubleNode<>(element);
         if (element == null) {
             return false;
         } else if (isEmpty()) {
             addFirst(element);
-
         } else {
-            (last.getPrevious()).setPrevious(nodo);
-            nodo.setNext(last.getNext());
             nodo.setPrevious(last);
+            nodo.setNext(last.getNext());
             last.setNext(nodo);
             last = nodo;
             efectivo++;
         }
-
         return true;
-
     }
 
     @Override
@@ -105,13 +98,12 @@ public class CircularDoubleLinkedList<E> implements List<E> {
         } else if (efectivo == 1) {
             last = null;
         } else {
-            E d = (last.getNext()).getContent();
-            ((last.getNext()).getNext()).setPrevious(last);
+            E d = last.getNext().getContent();
+            last.getNext().getNext().setPrevious(last);
             last.setNext((last.getNext()).getNext());
             efectivo--;
             return d;
         }
-
         return null;
     }
 
@@ -121,10 +113,12 @@ public class CircularDoubleLinkedList<E> implements List<E> {
             return last.getContent();
         }
         CircularDoubleNode<E> temp = last.getPrevious();
+        E answer = last.getContent();
         temp.setNext(last.getNext());
         last.getNext().setPrevious(temp);
         last = temp;
-        return last.getContent();
+        efectivo--;
+        return answer;
     }
 
     @Override
@@ -132,7 +126,6 @@ public class CircularDoubleLinkedList<E> implements List<E> {
         int c = 0;
         if (index == efectivo - 1) {
             return last.getContent();
-
         }
         for (CircularDoubleNode<E> i = last.getNext(); i != last; i = i.getNext()) {
             if (c == index) {
@@ -141,7 +134,6 @@ public class CircularDoubleLinkedList<E> implements List<E> {
             c++;
         }
         return null;
-
     }
 
     @Override
@@ -149,7 +141,7 @@ public class CircularDoubleLinkedList<E> implements List<E> {
         return (last == null);
     }
 
-    @Override//corregir
+    @Override
     public E remove(int index) {
         int c = 0;
         if (index < 0 || index >= efectivo) {
@@ -161,19 +153,20 @@ public class CircularDoubleLinkedList<E> implements List<E> {
         } else if (index == efectivo - 1) {
             E tmp = last.getContent();
             removeLast();
-            
             return tmp;
         }
-        for (CircularDoubleNode<E> i = last.getNext(); i != last; i = i.getNext()) {
+        for (CircularDoubleNode<E> nodo = last.getNext(); nodo != last; nodo = nodo.getNext()) {
             if (c == index) {
-                E d = i.getContent();
-                (i.getPrevious()).setNext(i.getNext());
-                (i.getNext()).setPrevious(i.getPrevious());
+                E d = nodo.getContent();
+                nodo.getPrevious().setNext(nodo.getNext());
+                nodo.getNext().setPrevious(nodo.getPrevious());
+                nodo.setContent(null);
+                nodo.setPrevious(null);
+                nodo.setNext(null);
                 efectivo--;
                 return d;
             }
             c++;
-            
         }
         return null;
     }
@@ -183,15 +176,14 @@ public class CircularDoubleLinkedList<E> implements List<E> {
         if (index < 0 || index > efectivo) {
             return null;
         } else if (element == null) {
-            System.out.println("elemento invalido");
+            System.out.println("Elemento invalido.");
             return null;
-
         } else {
             int c = 0;
-            for (CircularDoubleNode<E> i = last.getNext(); i != last; i = i.getNext()) {
+            for (CircularDoubleNode<E> nodo = last.getNext(); nodo != last; nodo = nodo.getNext()) {
                 if (c == index) {
-                    E d = i.getContent();
-                    i.setContent(element);
+                    E d = nodo.getContent();
+                    nodo.setContent(element);
                     return d;
                 }
                 c++;
@@ -212,39 +204,29 @@ public class CircularDoubleLinkedList<E> implements List<E> {
     public void setLast(CircularDoubleNode<E> last) {
         this.last = last;
     }
-    
+
+    @Override
     public String toString() {
-        StringBuilder s = new StringBuilder();
-        if (isEmpty()) {
-            return "[]";
-        }
-        s.append("[");
-
-        if (efectivo == 1) {
-            CircularDoubleNode<E> i = last;
-            s.append(i.getContent());
-            s.append("]");
-        } else {
-
-            for (CircularDoubleNode<E> i = last.getNext(); i != last; i = i.getNext()) {
-
-                if (i != last) {
-                    s.append(i.getContent() + ",");
-                }
+        CircularDoubleNode<E> node = last.getNext();
+        String s = "[";
+        for (int cont = 0; cont < efectivo; cont++) {
+            s += node.getContent().toString();
+            if (cont != efectivo - 1) {
+                s += ", ";
             }
-            s.append(last.getContent() + "]");
+            node = node.getNext();
         }
-        return s.toString();
+        return s + "]";
     }
 
     @Override
     public Iterator<E> iterator() {
         Iterator<E> it = new Iterator<E>() {
-            private CircularDoubleNode<E> p = last;
-            
+            private CircularDoubleNode<E> p = last.getNext();
+
             @Override
             public boolean hasNext() {
-                return p != last.getPrevious();
+                return p != last;
             }
 
             @Override
@@ -256,5 +238,4 @@ public class CircularDoubleLinkedList<E> implements List<E> {
         };
         return it;
     }
-
 }
