@@ -27,36 +27,33 @@ import models.RuletaNumerica;
 public class VentanaPrincipalController implements Initializable {
     
     @FXML
-    public BorderPane root;
-    
-    @FXML 
+    public BorderPane root; 
     public TextField txtApuestaInicial;
-    
-    @FXML 
     public TextField txtNumeroCirculos;
-    
-    @FXML 
     public Button btnJugar;
-    
-    @FXML
     public Button btnSalir;
+    public Label lblMessage;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-           
+        
     }   
     
     @FXML
-    void jugar() {
-        if (!txtApuestaInicial.getText().equals("")) {
-            System.out.println(Integer.valueOf(txtNumeroCirculos.getText()) + " " + Integer.valueOf(txtApuestaInicial.getText()));
-            RuletaNumerica.numCirculos = Integer.valueOf(txtNumeroCirculos.getText());
-            RuletaNumerica.apuestaInicial = Integer.valueOf(txtApuestaInicial.getText());
-        }
+    void jugar() { 
         try {
+            if (!txtApuestaInicial.getText().equals("")) {
+                System.out.println(txtApuestaInicial.getText() + " " + txtNumeroCirculos.getText());
+                RuletaNumerica ng = RuletaNumerica.getRuletaNumerica();
+                ng.numCirculos = Integer.parseInt(txtNumeroCirculos.getText());
+                ng.apuestaInicial = Integer.parseInt(txtApuestaInicial.getText());
+            }if(txtNumeroCirculos.getText().equals("") || txtApuestaInicial.getText().equals("")){
+                lblMessage.setText("Debes Ingresar Los Datos Para Poder Jugar!");
+            }
             App.setRoot("VentanaGame");
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        }   
+        catch (IOException ex) {
+            ex.getMessage();
         }
     }
     

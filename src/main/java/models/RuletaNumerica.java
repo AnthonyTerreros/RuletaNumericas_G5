@@ -35,7 +35,6 @@ public class RuletaNumerica {
         return ruletaNumerica;
     }
     
-    
     public static void rotate(CircularDoubleLinkedList<Integer> l, Rotate r) {
         if (l.isEmpty()) {
             return;
@@ -76,6 +75,7 @@ public class RuletaNumerica {
         Random r = new Random();
         return r.nextInt(n);
     }
+
     public void cargarRuletas(){
         ruletas = new ArrayList<>();
         while(ruletas.size() < 2){

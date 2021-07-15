@@ -87,7 +87,11 @@ public class VentanaGameController implements Initializable {
         RuletaNumerica rn= RuletaNumerica.getRuletaNumerica();
         rn.cargarRuletas();
         System.out.println("Ruletas: " + rn.ruletas);
-         _root.getChildren().add(cargarContenidoVentana());
+        try {
+            _root.getChildren().add(cargarContenidoVentana());
+        } catch (NullPointerException e) {
+            Platform.runLater(() -> dialogoAd.setText("No Hay Circulos!!!"));
+        }
         int apuesta = rn.apuestaInicial;
         int numProhibido = RuletaNumerica.generarNumAle(apuesta - 1);
         apuestaInicial.setText(String.valueOf(apuesta));
@@ -155,7 +159,6 @@ public class VentanaGameController implements Initializable {
         t.setDaemon(true);
         t.start();
         root2.getChildren().addAll(l, l1, l2, iv, btn);
-
         Scene sce = new Scene(root2, 450, 400);
         s.setScene(sce);
         s.show(); 
@@ -179,7 +182,72 @@ public class VentanaGameController implements Initializable {
         contenedor.getChildren().addAll(c, t);
         return contenedor;
     }
-    
-    
+
+    public StackPane cargarContenidoVentana() {
+        StackPane container = new StackPane();
+        try {
+            RuletaNumerica rn = RuletaNumerica.getRuletaNumerica();
+            int size = rn.ruletas.size(), cont = 0, distance = size * 100, e = size * 10, i = size * 5;
+            int total = rn.sumTotal(), nCirculos = rn.ruletas.get(0).size() - 1;
+            int apuesta = rn.apuestaInicial;
+            int numProhibido = RuletaNumerica.generarNumAle(apuesta - 1);
+            
+            SpinnerValueFactory<Integer> numCirculos = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, nCirculos);
+            SpinnerValueFactory<Integer> numCircuferencias = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, size - 1);
+            for (CircularDoubleLinkedList<Integer> cdll : rn.ruletas) {
+                CirclePane miniroot = new CirclePane(distance, e, i);
+                Circle path = new Circle(distance, distance, distance);
+                Iterator<Integer> it = cdll.iterator();
+                while (it.hasNext()) {
+                    Integer content = it.next();
+                    StackPane sp = crearCirculo(String.valueOf(content), cont);
+                    miniroot.getChildren().add(sp);
+                    cont++;
+                }
+                StackPane sp = crearCirculo(String.valueOf(it.next()), cont);
+                miniroot.getChildren().add(sp);
+                distance -= 100;
+                e -= 10;
+                i -= 5;
+                path.setStroke(Color.BLACK);
+                path.setFill(null);
+                container.getChildren().addAll(path, miniroot);
+            }
+            sumaRuleta.setText(String.valueOf(total));
+            indexCircuferencia.setValueFactory(numCircuferencias);
+            indexCirculo.setValueFactory(numCirculos);
+            String s;
+            if (total < 0 || total == numProhibido || rn.numCirculos == 0) {
+                if (total < 0) {
+                    s = "Perdiste, el total de la ruleta numerica es menor que cero.";
+                } else {
+                    s = "Perdiste, te salio un numero prohibido.";
+                }
+                VentanaAdicional(Status.LOSE, s);
+            }
+            if (apuesta == total) {
+                s = "Ganaste, tu apuesta cumple con la suma de la ruleta.";
+                VentanaAdicional(Status.WIN, s);
+            }
+
+        } catch (Exception e) {
+            System.out.println("No Hay Circulos!");
+        }
+        return container;
+    }
+
+    @FXML
+    public void eliminarCirculo(ActionEvent e) {
+        RuletaNumerica rn = RuletaNumerica.getRuletaNumerica();
+        int value = indexCirculo.getValue();
+        for(CircularDoubleLinkedList<Integer> cdll: rn.ruletas){
+            cdll.remove(value);
+        }
+        Platform.runLater(() -> {    
+            _root.getChildren().clear();
+            _root.getChildren().add(cargarContenidoVentana());
+        });
+        actualizarVentana();
+    }
     
 }

@@ -2,30 +2,28 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.espol.ed.grupo_05_ed.VentanaGameController">
-   <left>
-      <HBox fx:id="_root" alignment="CENTER" prefHeight="500.0" prefWidth="536.0" BorderPane.alignment="CENTER" />
-   </left>
    <right>
-      <VBox alignment="CENTER" prefHeight="500.0" prefWidth="171.0" style="-fx-background-color: #e0e0e0;" BorderPane.alignment="CENTER">
+      <VBox alignment="TOP_CENTER" prefHeight="500.0" prefWidth="154.0" style="-fx-background-color: #e0e0e0;" BorderPane.alignment="CENTER">
          <children>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                <children>
-                  <VBox alignment="CENTER" prefHeight="222.0" prefWidth="154.0" spacing="10.0">
+                  <VBox alignment="CENTER" prefHeight="148.0" prefWidth="154.0" spacing="5.0">
                      <children>
                         <Label text="Suma">
                            <font>
                               <Font name="System Bold" size="16.0" />
                            </font>
                         </Label>
-                        <Label fx:id="sumaRuleta">
+                        <Label fx:id="sumaRuleta" style="-fx-text-fill: green; -fx-font-weight: bold;">
                            <font>
-                              <Font size="14.0" />
+                              <Font name="System Bold" size="18.0" />
                            </font>
                         </Label>
                         <Label text="Apuesta Inicial ">
@@ -33,9 +31,9 @@
                               <Font name="System Bold" size="16.0" />
                            </font>
                         </Label>
-                        <Label fx:id="apuestaInicial">
+                        <Label fx:id="apuestaInicial" style="-fx-text-fill: green; -fx-font-weight: bold;">
                            <font>
-                              <Font size="14.0" />
+                              <Font size="18.0" />
                            </font>
                         </Label>
                         <Label text="Numero Prohibido ">
@@ -43,54 +41,60 @@
                               <Font name="System Bold" size="16.0" />
                            </font>
                         </Label>
-                        <Label fx:id="numeroProhibido">
+                        <Label fx:id="numeroProhibido" style="-fx-text-fill: red; -fx-font-weight: bold;">
                            <font>
-                              <Font size="14.0" />
+                              <Font size="18.0" />
                            </font>
                         </Label>
                      </children>
                   </VBox>
                </children>
             </HBox>
-            <HBox alignment="CENTER" prefHeight="42.0" prefWidth="164.0" spacing="10.0">
+            <HBox alignment="CENTER" prefHeight="47.0" prefWidth="194.0" spacing="10.0">
                <children>
                   <VBox alignment="CENTER" prefHeight="85.0" prefWidth="122.0" spacing="10.0">
                      <children>
                         <Label text="Opciones">
                            <font>
-                              <Font name="System Bold" size="20.0" />
+                              <Font name="System Bold" size="22.0" />
                            </font>
                         </Label>
-                        <Label fx:id="dialogoAd" prefHeight="39.0" prefWidth="97.0" style="-fx-text-alignment: justify;" />
                      </children>
                   </VBox>
                </children>
             </HBox>
-            <HBox fx:id="containerRotate" alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+            <HBox fx:id="containerRotate" alignment="CENTER" prefHeight="83.0" prefWidth="164.0">
                <children>
-                  <VBox alignment="CENTER" prefHeight="100.0" prefWidth="119.0" spacing="10.0">
+                  <VBox alignment="CENTER" prefHeight="112.0" prefWidth="161.0" spacing="5.0">
                      <children>
                         <Label text="Rotar a la:">
                            <font>
-                              <Font name="System Bold" size="16.0" />
+                              <Font name="System Bold" size="18.0" />
                            </font>
                         </Label>
-                        <Button fx:id="btnRotarIzquierda" mnemonicParsing="false" text="Izquierda" />
-                        <Button fx:id="btnRotarDerecha" mnemonicParsing="false" text="Derecha" />
+                        <Spinner fx:id="indexCircuferencia" prefHeight="25.0" prefWidth="56.0" />
+                        <Button fx:id="btnRotarIzquierda" mnemonicParsing="false" onAction="#rotarIzquierda" text="Izquierda" />
+                        <Button fx:id="btnRotarDerecha" mnemonicParsing="false" onAction="#rotarDerecha" text="Derecha" />
                      </children>
                   </VBox>
                </children>
             </HBox>
             <HBox fx:id="containerDelete" alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <VBox alignment="CENTER" prefHeight="100.0" prefWidth="106.0" spacing="10.0">
+                  <VBox alignment="CENTER" prefHeight="132.0" prefWidth="165.0" spacing="5.0">
                      <children>
                         <Label text="Eliminar">
                            <font>
-                              <Font name="System Bold" size="16.0" />
+                              <Font name="System Bold" size="18.0" />
                            </font>
                         </Label>
-                        <Button fx:id="btnEliminarCirculos" mnemonicParsing="false" text="Eliminar" />
+                        <Label text="Ingrese Posicion:">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Label>
+                        <Spinner fx:id="indexCirculo" prefHeight="25.0" prefWidth="60.0" />
+                        <Button fx:id="btnEliminarCirculos" mnemonicParsing="false" onAction="#eliminarCirculo" text="Eliminar" />
                      </children>
                   </VBox>
                </children>
@@ -98,4 +102,7 @@
          </children>
       </VBox>
    </right>
+   <left>
+      <HBox fx:id="_root" alignment="CENTER" prefHeight="500.0" prefWidth="546.0" BorderPane.alignment="CENTER" />
+   </left>
 </BorderPane>
