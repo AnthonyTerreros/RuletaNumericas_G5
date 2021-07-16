@@ -1,11 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.espol.ed.grupo_05_ed;
 
-import TDAs.ArrayList;
 import TDAs.CircularDoubleLinkedList;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -14,19 +8,16 @@ import java.util.Iterator;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -40,7 +31,6 @@ import models.CirclePane;
 import models.Rotate;
 import models.RuletaNumerica;
 import models.Status;
-
 
 /**
  * FXML Controller class
@@ -80,25 +70,92 @@ public class VentanaGameController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         Game();
-        
     }
     
-    public static void Game() {
-        System.out.println("Game");
-        RuletaNumerica rn= RuletaNumerica.getRuletaNumerica();
+    public void Game() {
+        RuletaNumerica rn = RuletaNumerica.getRuletaNumerica();
         rn.cargarRuletas();
+        actualizarVentana();
         System.out.println("Ruletas: " + rn.ruletas);
-        try {
-            _root.getChildren().add(cargarContenidoVentana());
-        } catch (NullPointerException e) {
-            Platform.runLater(() -> dialogoAd.setText("No Hay Circulos!!!"));
-        }
+//        _root.getChildren().add(cargarContenidoVentana());
+        
+        Label l4 = new Label("Sociedad");
+        _root.getChildren().add(l4);
         int apuesta = rn.apuestaInicial;
         int numProhibido = RuletaNumerica.generarNumAle(apuesta - 1);
         apuestaInicial.setText(String.valueOf(apuesta));
         numeroProhibido.setText(String.valueOf(numProhibido));
     }
-
+    
+    //Platform.runLater(() -> dialogoAd.setText("No Hay Circulos!!!"));
+    
+    public StackPane crearCirculo(String content, int n) {
+        StackPane contenedor = new StackPane();
+        Circle c = new Circle(25, 25, 25);
+        Text t = new Text(content);
+        contenedor.setMaxSize(10.00, 10.00);
+        c.setStroke(Color.BLACK);
+        if(n % 2 == 0){
+            c.setFill(Color.RED);
+        }else{
+            c.setFill(Color.YELLOW);
+        }
+        t.setFill(Color.BLACK);
+        t.setFont(new Font("System", 22));
+        t.setStyle("-fx-font-weight: bold");
+        t.setBoundsType(TextBoundsType.VISUAL);
+        contenedor.getChildren().addAll(c, t);
+        return contenedor;
+    }
+    
+    public StackPane cargarContenidoVentana() {
+        StackPane container = new StackPane();
+        RuletaNumerica rn = RuletaNumerica.getRuletaNumerica();
+        int size = rn.ruletas.size(), cont = 0, distance = size * 100, e = size * 10, i = size * 5;
+        int total = rn.sumTotal();
+        int nCirculos = rn.ruletas.get(0).size() - 1;
+        int apuesta = rn.apuestaInicial;
+        int numProhibido = RuletaNumerica.generarNumAle(apuesta - 1);
+        SpinnerValueFactory<Integer> numCirculos = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, nCirculos);
+        SpinnerValueFactory<Integer> numCircuferencias = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, size - 1);
+        for (CircularDoubleLinkedList<Integer> cdll : rn.ruletas) {
+            CirclePane miniroot = new CirclePane(distance, e, i);
+            Circle path = new Circle(distance, distance, distance);
+            Iterator<Integer> it = cdll.iterator();
+            while (it.hasNext()) {
+                Integer content = it.next();
+                StackPane sp = crearCirculo(String.valueOf(content), cont);
+                miniroot.getChildren().add(sp);
+                cont++;
+            }
+            StackPane sp = crearCirculo(String.valueOf(it.next()), cont);
+            miniroot.getChildren().add(sp);
+            distance -= 100;
+            e -= 10;
+            i -= 5;
+            path.setStroke(Color.BLACK);
+            path.setFill(null);
+            container.getChildren().addAll(path, miniroot);
+        }
+        sumaRuleta.setText(String.valueOf(total));
+        indexCircuferencia.setValueFactory(numCircuferencias);
+        indexCirculo.setValueFactory(numCirculos);
+        String s;
+        if (total < 0 || total == numProhibido || rn.numCirculos == 0) {
+            if (total < 0) {
+                s = "Perdiste, el total de la ruleta numerica es menor que cero.";
+            } else {
+                s = "Perdiste, te salio un numero prohibido.";
+            }
+            VentanaAdicional(Status.LOSE, s);
+        }
+        if (apuesta == total) {
+            s = "Ganaste, tu apuesta cumple con la suma de la ruleta.";
+            VentanaAdicional(Status.WIN, s);
+        }
+        return container;
+    }
+    
     public void VentanaAdicional(Status status, String reason) {
         VBox root2 = new VBox();
         Label l = new Label();
@@ -123,9 +180,9 @@ public class VentanaGameController implements Initializable {
             fotoString += "Perdiste.png";
             l.setText("GAME OVER");
             l.setStyle("-fx-text-fill: red; -fx-font-size: 26; -fx-font-weight: bold;");
-
+            
         }
-       try (FileInputStream input = new FileInputStream(fotoString)) {
+        try (FileInputStream input = new FileInputStream(fotoString)) {
                 Image i = new Image(input, 200, 200, true, false);
                 iv.setImage(i);
             } catch (IOException ex) {
@@ -152,7 +209,7 @@ public class VentanaGameController implements Initializable {
             try {
                 s.close();
                 App.setRoot("VentanaPrincipal");
-
+                
             } catch (IOException ex) {
                 ex.getMessage();
             }
@@ -162,79 +219,7 @@ public class VentanaGameController implements Initializable {
         root2.getChildren().addAll(l, l1, l2, iv, btn);
         Scene sce = new Scene(root2, 450, 400);
         s.setScene(sce);
-        s.show(); 
-    }
-    
-   public StackPane crearCirculo(String content, int n) {
-        StackPane contenedor = new StackPane();
-        Circle c = new Circle(25, 25, 25);
-        Text t = new Text(content);
-        contenedor.setMaxSize(10.00, 10.00);
-        c.setStroke(Color.BLACK);
-        if(n % 2 == 0){
-            c.setFill(Color.RED);
-        }else{
-            c.setFill(Color.YELLOW);
-        }
-        t.setFill(Color.BLACK);
-        t.setFont(new Font("System", 22));
-        t.setStyle("-fx-font-weight: bold");
-        t.setBoundsType(TextBoundsType.VISUAL);
-        contenedor.getChildren().addAll(c, t);
-        return contenedor;
-    }
-
-    public StackPane cargarContenidoVentana() {
-        StackPane container = new StackPane();
-        try {
-            RuletaNumerica rn = RuletaNumerica.getRuletaNumerica();
-            int size = rn.ruletas.size(), cont = 0, distance = size * 100, e = size * 10, i = size * 5;
-            int total = rn.sumTotal(), nCirculos = rn.ruletas.get(0).size() - 1;
-            int apuesta = rn.apuestaInicial;
-            int numProhibido = RuletaNumerica.generarNumAle(apuesta - 1);
-            
-            SpinnerValueFactory<Integer> numCirculos = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, nCirculos);
-            SpinnerValueFactory<Integer> numCircuferencias = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, size - 1);
-            for (CircularDoubleLinkedList<Integer> cdll : rn.ruletas) {
-                CirclePane miniroot = new CirclePane(distance, e, i);
-                Circle path = new Circle(distance, distance, distance);
-                Iterator<Integer> it = cdll.iterator();
-                while (it.hasNext()) {
-                    Integer content = it.next();
-                    StackPane sp = crearCirculo(String.valueOf(content), cont);
-                    miniroot.getChildren().add(sp);
-                    cont++;
-                }
-                StackPane sp = crearCirculo(String.valueOf(it.next()), cont);
-                miniroot.getChildren().add(sp);
-                distance -= 100;
-                e -= 10;
-                i -= 5;
-                path.setStroke(Color.BLACK);
-                path.setFill(null);
-                container.getChildren().addAll(path, miniroot);
-            }
-            sumaRuleta.setText(String.valueOf(total));
-            indexCircuferencia.setValueFactory(numCircuferencias);
-            indexCirculo.setValueFactory(numCirculos);
-            String s;
-            if (total < 0 || total == numProhibido || rn.numCirculos == 0) {
-                if (total < 0) {
-                    s = "Perdiste, el total de la ruleta numerica es menor que cero.";
-                } else {
-                    s = "Perdiste, te salio un numero prohibido.";
-                }
-                VentanaAdicional(Status.LOSE, s);
-            }
-            if (apuesta == total) {
-                s = "Ganaste, tu apuesta cumple con la suma de la ruleta.";
-                VentanaAdicional(Status.WIN, s);
-            }
-
-        } catch (Exception e) {
-            System.out.println("No Hay Circulos!");
-        }
-        return container;
+        s.show();
     }
 
     @FXML
@@ -250,6 +235,7 @@ public class VentanaGameController implements Initializable {
         });
         actualizarVentana();
     }
+    
     @FXML
     public void rotarIzquierda(ActionEvent e){
         RuletaNumerica rn = RuletaNumerica.getRuletaNumerica();
@@ -257,7 +243,7 @@ public class VentanaGameController implements Initializable {
         rn.rotate(rn.ruletas.get(value), Rotate.LEFT);
         actualizarVentana();
     }
-
+    
     @FXML
     public void rotarDerecha(ActionEvent e){
         RuletaNumerica rn = RuletaNumerica.getRuletaNumerica();

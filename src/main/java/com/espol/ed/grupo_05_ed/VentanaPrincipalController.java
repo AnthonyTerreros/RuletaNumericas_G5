@@ -9,11 +9,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -50,6 +49,7 @@ public class VentanaPrincipalController implements Initializable {
             }if(txtNumeroCirculos.getText().equals("") || txtApuestaInicial.getText().equals("")){
                 lblMessage.setText("Debes Ingresar Los Datos Para Poder Jugar!");
             }
+            System.out.println("Cambiando de Ventana....!!!!");
             App.setRoot("VentanaGame");
         }   
         catch (IOException ex) {

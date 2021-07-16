@@ -13,7 +13,7 @@
 
 <BorderPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.espol.ed.grupo_05_ed.VentanaPrincipalController">
    <left>
-      <VBox prefHeight="500.0" prefWidth="230.0" style="-fx-background-color: #eb1515;" BorderPane.alignment="CENTER">
+      <VBox alignment="CENTER" prefHeight="500.0" prefWidth="230.0" style="-fx-background-color: #eb1515;" BorderPane.alignment="CENTER">
          <children>
             <VBox alignment="CENTER" prefHeight="156.0" prefWidth="230.0">
                <children>
@@ -29,15 +29,11 @@
                   </Label>
                </children>
             </VBox>
-            <HBox alignment="CENTER" prefHeight="347.0" prefWidth="230.0">
-               <children>
-                  <ImageView fitHeight="276.0" fitWidth="223.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../../../recursosImagenes/Ruletas.png" />
-                     </image>
-                  </ImageView>
-               </children>
-            </HBox>
+            <ImageView fitHeight="276.0" fitWidth="223.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../recursosImagenes/Ruletas.png" />
+               </image>
+            </ImageView>
          </children>
       </VBox>
    </left>
@@ -46,13 +42,22 @@
          <children>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Label alignment="CENTER" text="Bienvenido  ">
+                  <Label alignment="CENTER" prefHeight="84.0" prefWidth="313.0" text="Bienvenido  " textAlignment="CENTER">
                      <font>
                         <Font size="57.0" />
                      </font></Label>
                </children>
             </HBox>
-            <HBox alignment="CENTER" prefHeight="238.0" prefWidth="470.0" spacing="10.0">
+            <HBox alignment="CENTER" prefHeight="69.0" prefWidth="470.0" spacing="10.0">
+               <children>
+                  <Label fx:id="lblMessage" textFill="RED">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                <children>
                   <Label text="Apuesta Inicial:  " />
                   <TextField fx:id="txtApuestaInicial" prefHeight="25.0" prefWidth="48.0" />
@@ -68,7 +73,7 @@
                      </font></Button>
                </children>
             </HBox>
-            <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0">
+            <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                <children>
                   <Button fx:id="btnSalir" mnemonicParsing="false" onAction="#close" prefHeight="38.0" prefWidth="80.0" style="-fx-background-color: #dc3545; -fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: white;" text="Salir" />
                </children>

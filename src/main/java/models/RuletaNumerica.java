@@ -22,7 +22,7 @@ public class RuletaNumerica {
     public int apuestaInicial;
     public static RuletaNumerica ruletaNumerica;
 
-    public static List<CircularDoubleLinkedList<Integer>> ruletas;
+    public List<CircularDoubleLinkedList<Integer>> ruletas;
 
     private RuletaNumerica() {
         
@@ -35,7 +35,21 @@ public class RuletaNumerica {
         return ruletaNumerica;
     }
     
-    public static void rotate(CircularDoubleLinkedList<Integer> l, Rotate r) {
+    public void cargarRuletas(){
+        ruletas = new ArrayList<>();
+        while(ruletas.size() < 2){
+            CircularDoubleLinkedList<Integer> cdll = new CircularDoubleLinkedList<>();
+            for(int i = 0; i < numCirculos; i++){
+                int num = RuletaNumerica.generarNumAle(9);
+                System.out.print(num + " ");
+                cdll.addLast(num);
+            }
+            System.out.println("Salto");
+            ruletas.addLast(cdll);
+        }
+    }
+    
+    public void rotate(CircularDoubleLinkedList<Integer> l, Rotate r) {
         if (l.isEmpty()) {
             return;
         } else if (r == Rotate.LEFT) {
@@ -59,10 +73,12 @@ public class RuletaNumerica {
         }
     }
     
-    public static int sumTotal(){
+    public int sumTotal(){
         int cont = 0;
+        System.out.println("Suma Total: " + ruletas);
+        System.out.println(ruletas.get(0));
         for(CircularDoubleLinkedList<Integer> cdll: ruletas){
-            Iterator<Integer> it = cdll.iterator();
+            Iterator<Integer> it = cdll.iterator(); //PROBLEM
             while(it.hasNext()){
                 cont += it.next();
             }
@@ -75,16 +91,4 @@ public class RuletaNumerica {
         Random r = new Random();
         return r.nextInt(n);
     }
-
-    public void cargarRuletas(){
-        ruletas = new ArrayList<>();
-        while(ruletas.size() < 2){
-            CircularDoubleLinkedList<Integer> cdll = new CircularDoubleLinkedList<>();
-            for(int i = 0; i < numCirculos; i++){
-                cdll.addLast(RuletaNumerica.generarNumAle(9));
-            }
-            ruletas.addLast(cdll);
-        }
-    }
-    
 }
