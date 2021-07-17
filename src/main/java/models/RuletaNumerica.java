@@ -40,11 +40,9 @@ public class RuletaNumerica {
         while(ruletas.size() < 2){
             CircularDoubleLinkedList<Integer> cdll = new CircularDoubleLinkedList<>();
             for(int i = 0; i < numCirculos; i++){
-                int num = RuletaNumerica.generarNumAle(9);
-                System.out.print(num + " ");
+                int num = RuletaNumerica.generarNumAle(10);
                 cdll.addLast(num);
             }
-            System.out.println("Salto");
             ruletas.addLast(cdll);
         }
     }
@@ -75,10 +73,8 @@ public class RuletaNumerica {
     
     public int sumTotal(){
         int cont = 0;
-        System.out.println("Suma Total: " + ruletas);
-        System.out.println(ruletas.get(0));
         for(CircularDoubleLinkedList<Integer> cdll: ruletas){
-            Iterator<Integer> it = cdll.iterator(); //PROBLEM
+            Iterator<Integer> it = cdll.iterator();
             while(it.hasNext()){
                 cont += it.next();
             }

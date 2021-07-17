@@ -103,6 +103,19 @@
       </VBox>
    </right>
    <left>
-      <HBox fx:id="_root" alignment="CENTER" prefHeight="500.0" prefWidth="546.0" BorderPane.alignment="CENTER" />
+      <VBox alignment="CENTER" prefHeight="500.0" prefWidth="545.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox alignment="CENTER" prefHeight="48.0" prefWidth="545.0">
+               <children>
+                  <Label fx:id="dialogoAd" style="-fx-text-fill: green;">
+                     <font>
+                        <Font name="System Bold" size="16.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox fx:id="_root" alignment="CENTER" prefHeight="456.0" prefWidth="545.0" />
+         </children>
+      </VBox>
    </left>
 </BorderPane>

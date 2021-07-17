@@ -27,6 +27,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextBoundsType;
 import javafx.stage.Stage;
+import models.Action;
 import models.CirclePane;
 import models.Rotate;
 import models.RuletaNumerica;
@@ -75,10 +76,13 @@ public class VentanaGameController implements Initializable {
     public void Game() {
         RuletaNumerica rn = RuletaNumerica.getRuletaNumerica();
         rn.cargarRuletas();
-        actualizarVentana();
+        try {
+            actualizarVentana();
+        } catch (NullPointerException e) {
+            dialogoAd.setText("No Hay Circulos.");
+        }
         System.out.println("Ruletas: " + rn.ruletas);
 //        _root.getChildren().add(cargarContenidoVentana());
-        
         Label l4 = new Label("Sociedad");
         _root.getChildren().add(l4);
         int apuesta = rn.apuestaInicial;
@@ -110,7 +114,8 @@ public class VentanaGameController implements Initializable {
     
     public StackPane cargarContenidoVentana() {
         StackPane container = new StackPane();
-        RuletaNumerica rn = RuletaNumerica.getRuletaNumerica();
+        try {
+            RuletaNumerica rn = RuletaNumerica.getRuletaNumerica();
         int size = rn.ruletas.size(), cont = 0, distance = size * 100, e = size * 10, i = size * 5;
         int total = rn.sumTotal();
         int nCirculos = rn.ruletas.get(0).size() - 1;
@@ -152,6 +157,9 @@ public class VentanaGameController implements Initializable {
         if (apuesta == total) {
             s = "Ganaste, tu apuesta cumple con la suma de la ruleta.";
             VentanaAdicional(Status.WIN, s);
+        }
+        } catch (Exception e) {
+            VentanaAdicional(Status.LOSE, "Perdiste, Te Quedaste Sin Circulos.");
         }
         return container;
     }
@@ -228,12 +236,9 @@ public class VentanaGameController implements Initializable {
         int value = indexCirculo.getValue();
         for(CircularDoubleLinkedList<Integer> cdll: rn.ruletas){
             cdll.remove(value);
-        }
-        Platform.runLater(() -> {    
-            _root.getChildren().clear();
-            _root.getChildren().add(cargarContenidoVentana());
-        });
+        } //Codigo Repetido!!
         actualizarVentana();
+        hacerOperacionApuesta(Action.DELETE);
     }
     
     @FXML
@@ -242,6 +247,7 @@ public class VentanaGameController implements Initializable {
         int value = indexCircuferencia.getValue();
         rn.rotate(rn.ruletas.get(value), Rotate.LEFT);
         actualizarVentana();
+        hacerOperacionApuesta(Action.ROTATE);
     }
     
     @FXML
@@ -249,7 +255,9 @@ public class VentanaGameController implements Initializable {
         RuletaNumerica rn = RuletaNumerica.getRuletaNumerica();
         int value = indexCircuferencia.getValue();
         rn.rotate(rn.ruletas.get(value), Rotate.RIGHT);
-        actualizarVentana(); 
+        actualizarVentana();
+        hacerOperacionApuesta(Action.ROTATE);
+        
     }
     
     public void actualizarVentana(){
@@ -260,5 +268,53 @@ public class VentanaGameController implements Initializable {
             });
         });
         t.start();
+    }
+    
+    public void hacerOperacionApuesta(Action action){
+
+        RuletaNumerica rn = RuletaNumerica.getRuletaNumerica();
+        String g4;
+        if(action == Action.ROTATE){
+            g4 = "Hiciste una Rotacion, ";
+        }else{
+            g4 = "Hiciste una Eliminacion, ";
+        }
+        Thread t = new Thread(() -> {
+            for(int i = 5; i > 0; i--){
+                String s = g4 + "Se Hara La Operacion Contraria en " + i + " segundos.";
+                Platform.runLater(() -> dialogoAd.setText(s));
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+        t.setDaemon(true);
+        t.start();
+        if (action == Action.DELETE) {
+            if (RuletaNumerica.generarNumAle(2) == 0) {
+                CircularDoubleLinkedList cdllAle = rn.ruletas.get(0);
+                rn.rotate(cdllAle, Rotate.RIGHT);
+                dialogoAd.setText("Se Hizo una Rotacion a la Derecha.");
+                System.out.println("Se Hizo una Rotacion a la Derecha.");
+            } else {
+                CircularDoubleLinkedList cdllAle = rn.ruletas.get(1);
+                rn.rotate(cdllAle, Rotate.LEFT);
+                dialogoAd.setText("Se Hizo una Rotacion a la Izquierda.");
+                System.out.println("Se Hizo una Rotacion a la Izquierda.");
+            }
+            actualizarVentana();
+        }
+        if(action == Action.ROTATE) {
+            int num = RuletaNumerica.generarNumAle(rn.numCirculos);
+            for (CircularDoubleLinkedList<Integer> cdll : rn.ruletas) {
+                cdll.remove(num);
+            }
+            dialogoAd.setText("Se Hizo una Eliminacion En La Posicion: " + num);
+            System.out.println("Se Hizo una Eliminacion En La Posicion: " + num);
+            System.out.println(rn.ruletas);
+            actualizarVentana();
+        }
     }
 }
