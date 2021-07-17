@@ -73,29 +73,25 @@ public class VentanaGameController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        actualizarVentana();
         Game();
     }
     
     public void Game() {
+        desactivarBotones(false);
         RuletaNumerica rn = RuletaNumerica.getRuletaNumerica();
         rn.cargarRuletas();
         try {
             actualizarVentana();
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
             dialogoAd.setText("No Hay Circulos.");
         }
-        System.out.println("Ruletas: " + rn.ruletas);
-//        _root.getChildren().add(cargarContenidoVentana());
-        Label l4 = new Label("Sociedad");
-        _root.getChildren().add(l4);
         int apuesta = rn.apuestaInicial;
         int numProhibido = RuletaNumerica.generarNumAle(apuesta - 1);
         apuestaInicial.setText(String.valueOf(apuesta));
         numeroProhibido.setText(String.valueOf(numProhibido));
     }
-    
-    //Platform.runLater(() -> dialogoAd.setText("No Hay Circulos!!!"));
-    
+
     public StackPane crearCirculo(String content, int n) {
         StackPane contenedor = new StackPane();
         Circle c = new Circle(25, 25, 25);
@@ -119,55 +115,59 @@ public class VentanaGameController implements Initializable {
         StackPane container = new StackPane();
         try {
             RuletaNumerica rn = RuletaNumerica.getRuletaNumerica();
-        int size = rn.ruletas.size(), cont = 0, distance = size * 100, e = size * 10, i = size * 5;
-        int total = rn.sumTotal();
-        int nCirculos = rn.ruletas.get(0).size() - 1;
-        int apuesta = rn.apuestaInicial;
-        int numProhibido = RuletaNumerica.generarNumAle(apuesta - 1);
-        SpinnerValueFactory<Integer> numCirculos = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, nCirculos);
-        SpinnerValueFactory<Integer> numCircuferencias = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, size - 1);
-        for (CircularDoubleLinkedList<Integer> cdll : rn.ruletas) {
-            CirclePane miniroot = new CirclePane(distance, e, i);
-            Circle path = new Circle(distance, distance, distance);
-            Iterator<Integer> it = cdll.iterator();
-            while (it.hasNext()) {
-                Integer content = it.next();
-                StackPane sp = crearCirculo(String.valueOf(content), cont);
+            int size = rn.ruletas.size(), cont = 0, distance = size * 100, e = size * 10, i = size * 5;
+            int total = rn.sumTotal();
+            int nCirculos = rn.ruletas.get(0).size() - 1;
+            int apuesta = rn.apuestaInicial;
+            int numProhibido = RuletaNumerica.generarNumAle(apuesta - 1);
+            SpinnerValueFactory<Integer> numCirculos = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, nCirculos);
+            SpinnerValueFactory<Integer> numCircuferencias = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, size - 1);
+            for (CircularDoubleLinkedList<Integer> cdll : rn.ruletas) {
+                CirclePane miniroot = new CirclePane(distance, e, i);
+                Circle path = new Circle(distance, distance, distance);
+                Iterator<Integer> it = cdll.iterator();
+                while (it.hasNext()) {
+                    Integer content = it.next();
+                    StackPane sp = crearCirculo(String.valueOf(content), cont);
+                    miniroot.getChildren().add(sp);
+                    cont++;
+                }
+                StackPane sp = crearCirculo(String.valueOf(it.next()), cont);
                 miniroot.getChildren().add(sp);
-                cont++;
+                distance -= 100;
+                e -= 10;
+                i -= 5;
+                path.setStroke(Color.BLACK);
+                path.setFill(null);
+                container.getChildren().addAll(path, miniroot);
             }
-            StackPane sp = crearCirculo(String.valueOf(it.next()), cont);
-            miniroot.getChildren().add(sp);
-            distance -= 100;
-            e -= 10;
-            i -= 5;
-            path.setStroke(Color.BLACK);
-            path.setFill(null);
-            container.getChildren().addAll(path, miniroot);
-        }
-        sumaRuleta.setText(String.valueOf(total));
-        indexCircuferencia.setValueFactory(numCircuferencias);
-        indexCirculo.setValueFactory(numCirculos);
-        String s;
-        if (total < 0 || total == numProhibido || rn.numCirculos == 0) {
-            if (total < 0) {
-                s = "Perdiste, el total de la ruleta numerica es menor que cero.";
-            } else {
-                s = "Perdiste, te salio un numero prohibido.";
+            sumaRuleta.setText(String.valueOf(total));
+            indexCircuferencia.setValueFactory(numCircuferencias);
+            indexCirculo.setValueFactory(numCirculos);
+            String s;
+            if (total < 0 || total == numProhibido || rn.ruletas.isEmpty()) {
+                if (total < 0) {
+                    s = "Perdiste, el total de la ruleta numerica es menor que cero.";
+                } else if (rn.ruletas.isEmpty() || rn.ruletas.get(0).isEmpty()) {
+                    s = "Perdiste, te quedaste sin Circulos.";
+                } else {
+                    s = "Perdiste, te salio un numero prohibido.";
+                }
+                VentanaAdicional(Status.LOSE, s);
             }
-            VentanaAdicional(Status.LOSE, s);
-        }
-        if (apuesta == total) {
-            s = "Ganaste, tu apuesta cumple con la suma de la ruleta.";
-            VentanaAdicional(Status.WIN, s);
-        }
-        } catch (Exception e) {
-            VentanaAdicional(Status.LOSE, "Perdiste, Te Quedaste Sin Circulos.");
+            if (apuesta == total) {
+                s = "Ganaste, tu apuesta cumple con la suma de la ruleta.";
+                VentanaAdicional(Status.WIN, s);
+            }
+        } catch (NullPointerException e) {
+            e.getMessage();
+//            VentanaAdicional(Status.LOSE, "Perdiste, Te Quedaste Sin Circulos.");
         }
         return container;
     }
     
     public void VentanaAdicional(Status status, String reason) {
+        desactivarBotones(true);
         VBox root2 = new VBox();
         Label l = new Label();
         Label l1 = new Label();
@@ -259,7 +259,6 @@ public class VentanaGameController implements Initializable {
         rn.rotate(rn.ruletas.get(value), Rotate.RIGHT);
         actualizarVentana();
         hacerOperacionApuesta(Action.ROTATE);
-        
     }
     
     public void actualizarVentana(){
@@ -303,36 +302,26 @@ public class VentanaGameController implements Initializable {
                 RuletaNumerica rn = RuletaNumerica.getRuletaNumerica();
                 if (action == Action.DELETE) {
                     CircularDoubleLinkedList<Integer> cdllAle = rn.ruletas.get(App.numAleatorio(rn.ruletas.size()));
-                    System.out.println("Genero Aleatorio: " + cdllAle);
                     int destNum = App.numAleatorio(2);
-                    System.out.println(destNum);
                     if (destNum == 0) {
                         rn.rotate(cdllAle, Rotate.RIGHT);
                         dialogoAd.setText("Se Hizo una Rotacion a la Derecha.");
-                        System.out.println("Se Hizo una Rotacion a la Derecha.");
                     } 
                     if(destNum == 1) {
                         rn.rotate(cdllAle, Rotate.LEFT);
                         dialogoAd.setText("Se Hizo una Rotacion a la Izquierda.");
-                        System.out.println("Se Hizo una Rotacion a la Izquierda.");
                     }
-                    actualizarVentana();
                 }
                 if (action == Action.ROTATE) {
-                    int num = RuletaNumerica.generarNumAle(rn.numCirculos);
-                    System.err.println("Numero: " + num);
-                    System.out.println(num);
+                    int num = RuletaNumerica.generarNumAle(rn.ruletas.get(0).size());
                     for (CircularDoubleLinkedList<Integer> cdll : rn.ruletas) {
                         System.out.println(cdll.remove(num));
                     }
-                    dialogoAd.setText("Se Hizo una Eliminacion En La Posicion: " + num);
-                    System.out.println("Se Hizo una Eliminacion En La Posicion: " + num);
-                    System.out.println(rn.ruletas);
-                    actualizarVentana();
+                    dialogoAd.setText("Se Hizo una Eliminacion En La Posicion: " + num);  
                 }
+                actualizarVentana();
             }
         });
-//        new Thread(t1).start();
         Thread t = new Thread(t1);
         t.start();
     }
@@ -341,6 +330,8 @@ public class VentanaGameController implements Initializable {
         btnEliminarCirculos.setDisable(b);
         btnRotarDerecha.setDisable(b);
         btnRotarIzquierda.setDisable(b);
+        containerDelete.setDisable(b);
+        containerRotate.setDisable(b);
     }
 
 }
