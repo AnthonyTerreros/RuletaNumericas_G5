@@ -32,6 +32,7 @@ import javafx.scene.text.TextBoundsType;
 import javafx.stage.Stage;
 import models.Action;
 import models.CirclePane;
+import models.Counter;
 import models.Rotate;
 import models.RuletaNumerica;
 import models.Status;
@@ -67,7 +68,7 @@ public class VentanaGameController implements Initializable {
     public Spinner<Integer> indexCirculo;
     @FXML
     public Spinner<Integer> indexCircuferencia;
-    
+ 
     /**
      * Initializes the controller class.
      */
@@ -75,6 +76,7 @@ public class VentanaGameController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         actualizarVentana();
         Game();
+        
     }
     
     public void Game() {
@@ -112,6 +114,7 @@ public class VentanaGameController implements Initializable {
     }
     
     public StackPane cargarContenidoVentana() {
+        dialogoAd.setText("¡ Elige una Opcion !");
         StackPane container = new StackPane();
         try {
             RuletaNumerica rn = RuletaNumerica.getRuletaNumerica();
@@ -161,7 +164,7 @@ public class VentanaGameController implements Initializable {
             }
         } catch (NullPointerException e) {
             e.getMessage();
-//            VentanaAdicional(Status.LOSE, "Perdiste, Te Quedaste Sin Circulos.");
+            VentanaAdicional(Status.LOSE, "Ocurrio Un Error.");
         }
         return container;
     }
@@ -234,31 +237,51 @@ public class VentanaGameController implements Initializable {
 
     @FXML
     public void eliminarCirculo(ActionEvent e) {
+        System.out.println(Counter.countClickbtnELI);
+        Counter.countClickbtnELI++;
+        System.out.println(Counter.countClickbtnELI);
         RuletaNumerica rn = RuletaNumerica.getRuletaNumerica();
         int value = indexCirculo.getValue();
         for(CircularDoubleLinkedList<Integer> cdll: rn.ruletas){
             cdll.remove(value);
         }
         actualizarVentana();
-        hacerOperacionApuesta(Action.DELETE);
+        if(Counter.countClickbtnELI % 2 == 1){
+            Counter.countClickbtnRIZQ++;
+            Counter.countClickbtnRDER++;
+            hacerOperacionApuesta(Action.ROTATE); 
+        }
     }
     
     @FXML
     public void rotarIzquierda(ActionEvent e){
+        System.out.println(Counter.countClickbtnRIZQ);
+        Counter.countClickbtnRIZQ++;
+        System.out.println(Counter.countClickbtnRIZQ);
         RuletaNumerica rn = RuletaNumerica.getRuletaNumerica();
         int value = indexCircuferencia.getValue();
         rn.rotate(rn.ruletas.get(value), Rotate.LEFT);
         actualizarVentana();
-        hacerOperacionApuesta(Action.ROTATE);
+        if(Counter.countClickbtnRIZQ % 2 == 1){
+            Counter.countClickbtnELI++;
+            hacerOperacionApuesta(Action.ROTATE);
+        }
     }
     
     @FXML
     public void rotarDerecha(ActionEvent e){
+        System.out.println(Counter.countClickbtnRDER);
+        Counter.countClickbtnRDER++;
+        System.out.println(Counter.countClickbtnRDER);
         RuletaNumerica rn = RuletaNumerica.getRuletaNumerica();
         int value = indexCircuferencia.getValue();
         rn.rotate(rn.ruletas.get(value), Rotate.RIGHT);
         actualizarVentana();
         hacerOperacionApuesta(Action.ROTATE);
+        if(Counter.countClickbtnRDER % 2 == 1){
+            Counter.countClickbtnELI++;
+            hacerOperacionApuesta(Action.ROTATE);
+        }
     }
     
     public void actualizarVentana(){
@@ -273,7 +296,6 @@ public class VentanaGameController implements Initializable {
     }
     
     public void hacerOperacionApuesta(Action action){
-        desactivarBotones(true);
         Task<Void> t1 = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
@@ -285,7 +307,7 @@ public class VentanaGameController implements Initializable {
                     g4 = "Hiciste una Eliminacion, ";
                 }
                 for (int i = 5; i > 0; i--) {
-                    String s = g4 + "Se Hara La Operacion Contraria en " + i + " segundos.";
+                    String s = g4 + "Elige la operacion contrario " + i + " segundos.";
                     Platform.runLater(() -> dialogoAd.setText(s));
                     try {
                         Thread.sleep(800);
@@ -299,27 +321,14 @@ public class VentanaGameController implements Initializable {
         t1.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             @Override
             public void handle(WorkerStateEvent t) {
-                RuletaNumerica rn = RuletaNumerica.getRuletaNumerica();
-                if (action == Action.DELETE) {
-                    CircularDoubleLinkedList<Integer> cdllAle = rn.ruletas.get(App.numAleatorio(rn.ruletas.size()));
-                    int destNum = App.numAleatorio(2);
-                    if (destNum == 0) {
-                        rn.rotate(cdllAle, Rotate.RIGHT);
-                        dialogoAd.setText("Se Hizo una Rotacion a la Derecha.");
-                    } 
-                    if(destNum == 1) {
-                        rn.rotate(cdllAle, Rotate.LEFT);
-                        dialogoAd.setText("Se Hizo una Rotacion a la Izquierda.");
-                    }
+                if(action == Action.ROTATE){
+                    desactivarContainerRotate(true);
+                    dialogoAd.setText("Elige La Posicion Donde Deseas Eliminar.");
                 }
-                if (action == Action.ROTATE) {
-                    int num = RuletaNumerica.generarNumAle(rn.ruletas.get(0).size());
-                    for (CircularDoubleLinkedList<Integer> cdll : rn.ruletas) {
-                        System.out.println(cdll.remove(num));
-                    }
-                    dialogoAd.setText("Se Hizo una Eliminacion En La Posicion: " + num);  
+                if(action == Action.DELETE){
+                    desactivarContainerDelete(true);
+                    dialogoAd.setText("Elige Hacia Donde Quieres Rotar.");
                 }
-                actualizarVentana();
             }
         });
         Thread t = new Thread(t1);
@@ -332,6 +341,18 @@ public class VentanaGameController implements Initializable {
         btnRotarIzquierda.setDisable(b);
         containerDelete.setDisable(b);
         containerRotate.setDisable(b);
+    }
+    
+    public void desactivarContainerRotate(boolean b){
+        btnRotarDerecha.setDisable(b);
+        btnRotarIzquierda.setDisable(b);
+        containerRotate.setDisable(b);
+    }
+    
+    public void desactivarContainerDelete(boolean b){
+        btnEliminarCirculos.setDisable(b);
+        containerDelete.setDisable(b);
+        
     }
 
 }

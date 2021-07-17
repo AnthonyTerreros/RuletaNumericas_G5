@@ -58,7 +58,6 @@ public class RuletaNumerica {
             }
             current.setContent(current.getContent() - 1);
             l.setLast(l.getLast().getNext());
-            System.out.println(l);
         } else {
             CircularDoubleNode<Integer> current = l.getLast().getNext();
             while (current != l.getLast()) {
@@ -67,7 +66,6 @@ public class RuletaNumerica {
             }
             current.setContent(current.getContent() + 1);
             l.setLast(current.getPrevious().getPrevious().getNext());
-            System.out.println(l);
         }
     }
     

@@ -207,16 +207,20 @@ public class CircularDoubleLinkedList<E> implements List<E> {
 
     @Override
     public String toString() {
-        CircularDoubleNode<E> node = last.getNext();
-        String s = "[";
-        for (int cont = 0; cont < efectivo; cont++) {
-            s += node.getContent().toString();
-            if (cont != efectivo - 1) {
-                s += ", ";
+        if (last == null) {
+            return "[]";
+        } else {
+            CircularDoubleNode<E> node = last.getNext();
+            String s = "[";
+            for (int cont = 0; cont < efectivo; cont++) {
+                s += node.getContent().toString();
+                if (cont != efectivo - 1) {
+                    s += ", ";
+                }
+                node = node.getNext();
             }
-            node = node.getNext();
+            return s + "]";
         }
-        return s + "]";
     }
 
     @Override

@@ -15,6 +15,7 @@ TDAs\CircularDoubleLinkedList$1.class
 com\espol\ed\grupo_05_ed\VentanaGameController$2.class
 com\espol\ed\grupo_05_ed\VentanaPrincipalController.class
 models\Rotate.class
+models\Counter.class
 models\CirclePane.class
 com\espol\ed\grupo_05_ed\VentanaGameController.class
 TDAs\ArrayList.class
