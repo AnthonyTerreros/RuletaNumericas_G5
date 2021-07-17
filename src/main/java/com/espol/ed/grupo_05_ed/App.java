@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Random;
 
 public class App extends Application {
     
@@ -32,6 +33,11 @@ public class App extends Application {
 
     public static void main(String[] args) {
         launch();
+    }
+    
+    public static int numAleatorio(int max) {
+        Random r = new Random();
+        return r.nextInt(max);
     }
 
 }

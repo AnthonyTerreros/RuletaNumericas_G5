@@ -7,7 +7,10 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -188,7 +191,6 @@ public class VentanaGameController implements Initializable {
             fotoString += "Perdiste.png";
             l.setText("GAME OVER");
             l.setStyle("-fx-text-fill: red; -fx-font-size: 26; -fx-font-weight: bold;");
-            
         }
         try (FileInputStream input = new FileInputStream(fotoString)) {
                 Image i = new Image(input, 200, 200, true, false);
@@ -236,7 +238,7 @@ public class VentanaGameController implements Initializable {
         int value = indexCirculo.getValue();
         for(CircularDoubleLinkedList<Integer> cdll: rn.ruletas){
             cdll.remove(value);
-        } //Codigo Repetido!!
+        }
         actualizarVentana();
         hacerOperacionApuesta(Action.DELETE);
     }
@@ -261,6 +263,7 @@ public class VentanaGameController implements Initializable {
     }
     
     public void actualizarVentana(){
+        desactivarBotones(false);
         Thread t = new Thread(() -> {
             Platform.runLater(() -> {
             _root.getChildren().clear();
@@ -271,50 +274,73 @@ public class VentanaGameController implements Initializable {
     }
     
     public void hacerOperacionApuesta(Action action){
-
-        RuletaNumerica rn = RuletaNumerica.getRuletaNumerica();
-        String g4;
-        if(action == Action.ROTATE){
-            g4 = "Hiciste una Rotacion, ";
-        }else{
-            g4 = "Hiciste una Eliminacion, ";
-        }
-        Thread t = new Thread(() -> {
-            for(int i = 5; i > 0; i--){
-                String s = g4 + "Se Hara La Operacion Contraria en " + i + " segundos.";
-                Platform.runLater(() -> dialogoAd.setText(s));
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
+        desactivarBotones(true);
+        Task<Void> t1 = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                RuletaNumerica rn = RuletaNumerica.getRuletaNumerica();
+                String g4;
+                if (action == Action.ROTATE) {
+                    g4 = "Hiciste una Rotacion, ";
+                } else {
+                    g4 = "Hiciste una Eliminacion, ";
+                }
+                for (int i = 5; i > 0; i--) {
+                    String s = g4 + "Se Hara La Operacion Contraria en " + i + " segundos.";
+                    Platform.runLater(() -> dialogoAd.setText(s));
+                    try {
+                        Thread.sleep(800);
+                    } catch (InterruptedException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                return null;
+            }
+        };
+        t1.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+            @Override
+            public void handle(WorkerStateEvent t) {
+                RuletaNumerica rn = RuletaNumerica.getRuletaNumerica();
+                if (action == Action.DELETE) {
+                    CircularDoubleLinkedList<Integer> cdllAle = rn.ruletas.get(App.numAleatorio(rn.ruletas.size()));
+                    System.out.println("Genero Aleatorio: " + cdllAle);
+                    int destNum = App.numAleatorio(2);
+                    System.out.println(destNum);
+                    if (destNum == 0) {
+                        rn.rotate(cdllAle, Rotate.RIGHT);
+                        dialogoAd.setText("Se Hizo una Rotacion a la Derecha.");
+                        System.out.println("Se Hizo una Rotacion a la Derecha.");
+                    } 
+                    if(destNum == 1) {
+                        rn.rotate(cdllAle, Rotate.LEFT);
+                        dialogoAd.setText("Se Hizo una Rotacion a la Izquierda.");
+                        System.out.println("Se Hizo una Rotacion a la Izquierda.");
+                    }
+                    actualizarVentana();
+                }
+                if (action == Action.ROTATE) {
+                    int num = RuletaNumerica.generarNumAle(rn.numCirculos);
+                    System.err.println("Numero: " + num);
+                    System.out.println(num);
+                    for (CircularDoubleLinkedList<Integer> cdll : rn.ruletas) {
+                        System.out.println(cdll.remove(num));
+                    }
+                    dialogoAd.setText("Se Hizo una Eliminacion En La Posicion: " + num);
+                    System.out.println("Se Hizo una Eliminacion En La Posicion: " + num);
+                    System.out.println(rn.ruletas);
+                    actualizarVentana();
                 }
             }
         });
-        t.setDaemon(true);
+//        new Thread(t1).start();
+        Thread t = new Thread(t1);
         t.start();
-        if (action == Action.DELETE) {
-            if (RuletaNumerica.generarNumAle(2) == 0) {
-                CircularDoubleLinkedList cdllAle = rn.ruletas.get(0);
-                rn.rotate(cdllAle, Rotate.RIGHT);
-                dialogoAd.setText("Se Hizo una Rotacion a la Derecha.");
-                System.out.println("Se Hizo una Rotacion a la Derecha.");
-            } else {
-                CircularDoubleLinkedList cdllAle = rn.ruletas.get(1);
-                rn.rotate(cdllAle, Rotate.LEFT);
-                dialogoAd.setText("Se Hizo una Rotacion a la Izquierda.");
-                System.out.println("Se Hizo una Rotacion a la Izquierda.");
-            }
-            actualizarVentana();
-        }
-        if(action == Action.ROTATE) {
-            int num = RuletaNumerica.generarNumAle(rn.numCirculos);
-            for (CircularDoubleLinkedList<Integer> cdll : rn.ruletas) {
-                cdll.remove(num);
-            }
-            dialogoAd.setText("Se Hizo una Eliminacion En La Posicion: " + num);
-            System.out.println("Se Hizo una Eliminacion En La Posicion: " + num);
-            System.out.println(rn.ruletas);
-            actualizarVentana();
-        }
     }
+    
+    public void desactivarBotones(boolean b){
+        btnEliminarCirculos.setDisable(b);
+        btnRotarDerecha.setDisable(b);
+        btnRotarIzquierda.setDisable(b);
+    }
+
 }
