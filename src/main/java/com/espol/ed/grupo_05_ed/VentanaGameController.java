@@ -164,7 +164,7 @@ public class VentanaGameController implements Initializable {
             }
         } catch (NullPointerException e) {
             e.getMessage();
-            VentanaAdicional(Status.LOSE, "Ocurrio Un Error.");
+            VentanaAdicional(Status.LOSE, "Perdiste, te quedaste sin circulos");
         }
         return container;
     }
@@ -235,7 +235,7 @@ public class VentanaGameController implements Initializable {
         s.show();
     }
 
-    @FXML
+   @FXML
     public void eliminarCirculo(ActionEvent e) {
         System.out.println(Counter.countClickbtnELI);
         Counter.countClickbtnELI++;
@@ -247,10 +247,11 @@ public class VentanaGameController implements Initializable {
         }
         actualizarVentana();
         if(Counter.countClickbtnELI % 2 == 1){
-            Counter.countClickbtnRIZQ++;
-            Counter.countClickbtnRDER++;
-            hacerOperacionApuesta(Action.ROTATE); 
+            Counter.countClickbtnRIZQ = 1;
+            Counter.countClickbtnRDER = 1;
+            hacerOperacionApuesta(Action.DELETE); 
         }
+        System.out.println("Eliminar: " + Counter.countClickbtnELI + " Derecha: " + Counter.countClickbtnRDER + " Izquierda:" + Counter.countClickbtnRIZQ);
     }
     
     @FXML
@@ -266,6 +267,7 @@ public class VentanaGameController implements Initializable {
             Counter.countClickbtnELI++;
             hacerOperacionApuesta(Action.ROTATE);
         }
+        System.out.println("Eliminar: " + Counter.countClickbtnELI + " Derecha: " + Counter.countClickbtnRDER + " Izquierda:" + Counter.countClickbtnRIZQ);
     }
     
     @FXML
@@ -282,6 +284,7 @@ public class VentanaGameController implements Initializable {
             Counter.countClickbtnELI++;
             hacerOperacionApuesta(Action.ROTATE);
         }
+        System.out.println("Eliminar: " + Counter.countClickbtnELI + " Derecha: " + Counter.countClickbtnRDER + " Izquierda:" + Counter.countClickbtnRIZQ);
     }
     
     public void actualizarVentana(){
